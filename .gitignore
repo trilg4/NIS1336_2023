@@ -1,0 +1,10 @@
+# Ignore data folder
+/data
+
+# Ignore .vscode folder
+/.vscode
+
+# Ignore object files and executables
+*.o
+*.out
+*.exe

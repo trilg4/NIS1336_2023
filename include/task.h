@@ -3,6 +3,9 @@
 
 #include <string>
 #include <vector>
+#include <algorithm>
+#include <fstream>
+#include <iostream>
 using namespace std;
 
 enum class Priority { HIGH, MEDIUM, LOW };//TODO

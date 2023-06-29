@@ -14,7 +14,8 @@ enum class Category { LEARNING, LIFE, ENTERTAINMENT };//TODO
 
 class Task {
 public:
-    Task(const string& name, const string& startTime, Priority priority = Priority::MEDIUM, Category category = Category::LIFE, const string& reminderTime = "");
+    Task(int id,const string& name,const string& startTime, Priority priority = Priority::MEDIUM, Category category = Category::LIFE, const string& reminderTime):
+    m_id(id), m_name(name), m_startTime(startTime), m_priority(priority), m_category(category), m_reminderTime(reminderTime){}
 
     const string& getName() const;
     const string& getStartTime() const;

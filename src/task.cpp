@@ -2,16 +2,6 @@
 using namespace std;
 int Task::s_nextId = 1;
 
-Task::Task(const string& name, const string& startTime, Priority priority = Priority::MEDIUM, Category category = Category::LIFE, const string& reminderTime = ""){
-    m_name = name;
-    m_startTime = startTime;
-    m_priority = priority;
-    m_category = category;
-    m_reminderTime = reminderTime;
-    m_id = s_nextId;
-    s_nextId++;
-}
-
 const string& Task::getName() const{
     return m_name;
 }
@@ -78,13 +68,14 @@ vector<Task> loadTasksFromFile(const string& filename){
         exit(-1);
     }
     int tmp_id;
-    string tmp_name;
+    string tmp_Name;
     string tmp_startTime;
     int tmp_priority;
     int tmp_category;
     string tmp_reminderTime;
-    while(infile >> tmp_id >> tmp_name >> tmp_startTime >> tmp_priority >> tmp_category >> tmp_reminderTime){
-        Task tmp(tmp_name, tmp_startTime, tmp_priority, tmp_category, tmp_reminderTime);
+    
+    while(infile >> tmp_id >> tmp_Name >> tmp_startTime >> tmp_priority >> tmp_category >> tmp_reminderTime){
+        Task tmp(tmp_id, tmp_Name, tmp_startTime, (Priority)tmp_priority, (Category)tmp_category, tmp_reminderTime);
         t_list.push_back(tmp);
     }
     return t_list;

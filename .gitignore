@@ -1,7 +1,8 @@
-# Ignore data folder
+# Ignore data and build folder
 /data
+/build
 
-# Ignore .vscode folder
+# Ignore .vscode  folder
 /.vscode
 
 # Ignore object files and executables

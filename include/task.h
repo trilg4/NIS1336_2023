@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <fstream>
 #include <iostream>
+#include <cstring>
 using namespace std;
 
 enum class Priority { HIGH, MEDIUM, LOW };//TODO

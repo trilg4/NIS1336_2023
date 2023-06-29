@@ -2,6 +2,7 @@
 #define USER_H
 
 #include <string>
+#include <vector>
 using namespace std;
 
 class User {
@@ -24,5 +25,10 @@ private:
         return password;
     }
 };
+
+vector<User> loadTasksFromFile(const string& filename);
+bool saveTasksToFile(const vector<User>& tasks, const string& filename);
+bool userLogin();
+bool userLogout();
 
 #endif // USER_H

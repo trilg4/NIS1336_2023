@@ -111,3 +111,33 @@ void printTasks(const vector<Task>& tasks){
             <<endl;
     }
 }
+
+vector<Task> getTasksByDate(const vector<Task>& tasks, const string& dateStr){
+    vector<Task> tmp;
+    for(auto it = tasks.begin() ; it < tasks.end() ; it++){
+        string tmp_string = (*it).getReminderTime();
+        string tmp_date_string = tmp_string.substr(0,5);
+        if(tmp_date_string == dateStr){
+            tmp.push_back((*it));
+        }
+    }
+    return tmp;
+}
+
+//id compare函数
+bool id_compare(Task a, Task b){
+    return a.getId() < b.getId();
+}
+//按id从小到大排序
+void sort_by_id(vector<Task>& tasks){
+    sort(tasks.begin(), tasks.end(), id_compare);
+}
+
+//time compare函数
+bool time_compare(Task a, Task b){
+    return a.getReminderTime() < b.getReminderTime();
+}
+//按提醒时间从小到大排序
+void sort_by_reminderTime(vector<Task>& tasks){
+    sort(tasks.begin(), tasks.end(), time_compare);
+}

@@ -91,7 +91,7 @@ bool saveTasksToFile(const vector<Task>& tasks, const string& filename){
             << tmp.getStartTime() << " "
             << (int)tmp.getPriority() << " "
             << (int)tmp.getCategory() << " "
-            << tmp.getReminderTime() << " ";
+            << tmp.getReminderTime() << " " <<endl;
         }
         outputFile.close();
         return true;

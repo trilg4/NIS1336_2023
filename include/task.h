@@ -8,22 +8,32 @@
 #include <iostream>
 #include <cstring>
 using namespace std;
-
+/*-----------------------------*/
+//在使用vector时必须先进行load的操作
 enum class Priority { HIGH, MEDIUM, LOW };//TODO
 enum class Category { LEARNING, LIFE, ENTERTAINMENT };//TODO
 
 class Task {
 public:
     //从文件读取Task直接复制原有的id
-    Task(int id,const string& name,const string& startTime, Priority priority = Priority::MEDIUM, Category category = Category::LIFE, const string& reminderTime):
-    m_id(id), m_name(name), m_startTime(startTime), m_priority(priority), m_category(category), m_reminderTime(reminderTime){}
+    Task(int id = -1, const string& name = "", const string& startTime = "" , Priority priority = Priority::MEDIUM, Category category = Category::LIFE, const string& reminderTime = ""){
+        m_id = id;
+        m_name = name;
+        m_startTime = startTime;
+        m_priority = priority;
+        m_category = category;
+        m_reminderTime = reminderTime;
+    }
     //创建Task生成新的id
-    Task(const string& name,const string& startTime, Priority priority = Priority::MEDIUM, Category category = Category::LIFE, const string& reminderTime):
-    m_name(name), m_startTime(startTime), m_priority(priority), m_category(category), m_reminderTime(reminderTime){
+    Task(const string& name = "",const string& startTime = "", Priority priority = Priority::MEDIUM, Category category = Category::LIFE, const string& reminderTime = ""){
         m_id = s_nextId;
         s_nextId++;
+        m_name = name;
+        m_startTime = startTime;
+        m_priority = priority;
+        m_category = category;
+        m_reminderTime = reminderTime;
     }
-    //获取task成员变量
     const string& getName() const;
     const string& getStartTime() const;
     Priority getPriority() const;

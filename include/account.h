@@ -26,9 +26,10 @@ private:
     }
 };
 
-vector<User> loadTasksFromFile(const string& filename);
+vector<User> loadTasksFromFile(const string& filename, User user);
 bool saveTasksToFile(const vector<User>& tasks, const string& filename);
 bool userLogin();
 bool userLogout();
+bool userLoggedIn = false;
 
 #endif // USER_H

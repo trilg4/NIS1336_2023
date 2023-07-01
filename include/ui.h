@@ -16,12 +16,12 @@ private:
 
     bool login();
     void logout();
-    void showMenu() const;
-    void showTasks() const;
+    void showMenu();
+    void showTasks();
     void addTask();
     void deleteTask();
-    void showTasksByDate() const;
-    void printReminder(const Task& task) const;
+    void showTasksByDate();
+    void printReminder(const Task task);
 };
 
 #endif // UI_H

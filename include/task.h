@@ -46,7 +46,7 @@ public:
     void setPriority(Priority priority);
     void setCategory(Category category);
     void setReminderTime(const string& reminderTime);
-
+    friend void setNextId(const int next_id);
 private:
     static int s_nextId;
     int m_id;
@@ -61,10 +61,11 @@ private:
 
 void addTask(vector<Task>& tasks, const Task& task);
 bool deleteTask(vector<Task>& tasks, int taskId);
-vector<Task> loadTasksFromFile(const string& filename);
+vector<Task> loadTasksFromFile(const string& filename); //保存，但会将数据由id排序
 bool saveTasksToFile(const vector<Task>& tasks, const string& filename);
 vector<Task> getTasksByDate(const vector<Task>& tasks, const string& dateStr); //获取某一天的所有任务
 void printTasks(const vector<Task>& tasks); //打印所有任务信息
 void sort_by_id(vector<Task>& tasks); //任务列表按id升序
 void sort_by_reminderTime(vector<Task>& tasks); //任务列表按提醒时间升序
+void setNextId(const int next_id);
 #endif // TASK_H

@@ -78,6 +78,8 @@ vector<Task> loadTasksFromFile(const string& filename){
         Task tmp(tmp_id, tmp_Name, tmp_startTime, (Priority)tmp_priority, (Category)tmp_category, tmp_reminderTime);
         t_list.push_back(tmp);
     }
+    sort_by_id(t_list);
+    setNextId((*(t_list.end()-1)).getId()+1);
     return t_list;
 }
 
@@ -140,4 +142,8 @@ bool time_compare(Task a, Task b){
 //按提醒时间从小到大排序
 void sort_by_reminderTime(vector<Task>& tasks){
     sort(tasks.begin(), tasks.end(), time_compare);
+}
+
+void setNextId(const int next_id){
+    Task::s_nextId = next_id;
 }

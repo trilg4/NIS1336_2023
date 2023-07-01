@@ -103,6 +103,13 @@ bool saveTasksToFile(const vector<Task>& tasks, const string& filename){
 
 
 void printTasks(const vector<Task>& tasks){
+    cout<<setw(5)<<"Id"
+        <<setw(10)<<"Name"
+        <<setw(15)<<"Start Time"
+        <<setw(3)<<"Priority"
+        <<setw(3)<<"Category"
+        <<setw(15)<<"Reminder Time"
+        <<endl;
     for(auto it = tasks.begin() ; it < tasks.end() ; it++){
         cout<<setw(5) << (*it).getId()
             <<setw(10) << (*it).getName()

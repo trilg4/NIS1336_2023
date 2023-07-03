@@ -1,8 +1,14 @@
 #include "reminder.h"
-
+#include <chrono>
+#include <thread>
+#include <fstream>
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/file.h>
 
 Reminder::Reminder(const string& filename){
     Rem_Tasks = loadTasksFromFile(filename);
+    string re_filename = filename;
 };
 
 
@@ -24,36 +30,56 @@ void Reminder::reminderbyId(){
 
 
 
-void scan(){ //may check every 15 mins
-    int numberofTasks = Rem_Tasks.size();
-
-
-    //static int *overdue = new int[numberofTask]{0}; // initial state 
+void Reminder::scan(){ //may check every 15 mins
     
-    if("the lock of foreground is unlocked" ){
-        //lock the file from the frontground
-        while(){
-            for(int i=0;i<numberofTasks;i++){
-             if(compareTime(Rem_Tasks[i].getReminderTime(),getCurrentTime())&&Rem_Tasks[i].overdue)
-              {
-                   std::cout<<Rem_Tasks[i].getId()<<Rem_Tasks[i].getName()<<Rem_Tasks[i].getReminderTime()<<std::endl;
-                   tasks[i].overdue = 0;
-                }
-          }
-    } //to check the tasklist periodically
+ 
+ while(true){
+    while("the file is locked" ){
+        std::this_thread::sleep_for(std::chrono::seconds(60));
+    }        //to check the tasklist periodically
 
 
-
+    //open the file    
+    int fd = open("example.txt", O_RDWR);
+    if (fd == -1) {
+        std::cerr << "Failed to open the file." << std::endl;
+        return 1;
     }
-    
+
+    //lock the file
+    if (flock(fd, LOCK_EX) == -1) {
+        std::cerr << "Failed to acquire the lock." << std::endl;
+        close(fd);
+        return 1;
+    }
 
 
+    if("the file is locked"){
+        Rem_Tasks = loadTasksFromFile(re_filename);
+            int numberofTasks = Rem_Tasks.size();
+            for(int i=0;i<numberofTasks;i++){
+             if(compareTime(Rem_Tasks[i].getReminderTime(),getCurrentTime())&&!Rem_Tasks[i].isReminded())
+                {
+                   std::cout<<Rem_Tasks[i].getId()<<" "<<Rem_Tasks[i].getName()<<" "<<Rem_Tasks[i].getReminderTime()<<std::endl;
+                   Rem_Tasks[i].setReminded(true);
+                }
+            }
+        if (flock(fd, LOCK_UN) == -1) {
+            std::cerr << "Failed to release the lock." << std::endl;
+            } 
+        else {
+        std::cout << "File unlocked successfully!" << std::endl;
+        }
+        close(fd);
+
+    } 
+ }  
 
 };
 
 
 
-const string getCurrentTime() const{
+const string Reminder::getCurrentTime() const{
     // Get the current system time
     std::time_t currentTime = std::time(nullptr);
 
@@ -69,7 +95,7 @@ const string getCurrentTime() const{
 };
 
 
-bool compareTime(const string re_dueTime, const string re_currentTime){
+bool Reminder::compareTime(const string re_dueTime, const string re_currentTime){
     if(strcmp(re_dueTime,re_currentTime)==1||strcmp(re_dueTime,re_currentTime)==0) {
         return false;// the task is not overdue
     }

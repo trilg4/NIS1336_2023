@@ -15,21 +15,22 @@ public:
     User(const string& username, const string& password, int uid)
     {
         m_username = username;
-        m_passwordHash = password;
+        m_passwordHash =encryptPassword(password);
         m_uid=uid;
     }
     User(const string& username, const string& password){
         m_username = username;
-        m_passwordHash = password;
+        m_passwordHash =encryptPassword(password);
         m_uid=s_nextuid;
         s_nextuid++;
     }
     const string& getUsername() const { return m_username; }
     const string& getPasswordHash() const { return m_passwordHash; }
+    const int getUid() const {return m_uid;}
     bool checkPassword(const string& password) const {
         return m_passwordHash == encryptPassword(password);
     }
-
+    friend void setNextUid(const int next_id);
 private:
     string m_username;
     string m_passwordHash;
@@ -38,7 +39,6 @@ private:
         // TODO: Implement password encryption or hashing algorithm here
         unsigned char digest[MD5_DIGEST_LENGTH];
         MD5(reinterpret_cast<const unsigned char*>(password.c_str()),password.length(),digest);
-
         std::stringstream ss;
         for(int i=0;i<MD5_DIGEST_LENGTH;++i) {
             ss<<hex<<setw(2)<<setfill('0')<<static_cast<int>(digest[i]);
@@ -48,13 +48,12 @@ private:
     int m_uid;
     static int s_nextuid;
 };
-
-
 //vector<User> loadTasksFromFile(const string& filename);
 //bool saveTasksToFile(const vector<User>& tasks, const string& filename);
-bool userLogin();
-bool userLogout();
-void saveUserToFile(vector<User>& ulist);
+int userLogin();
+bool saveUserToFile(vector<User>& ulist);
 void loadUserFromFile(vector<User>& ulist);
+void sort_by_uid(vector<User>& ulist);
+void setNextUid(const int next_id);
 
 #endif // USER_H

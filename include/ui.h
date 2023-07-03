@@ -13,7 +13,6 @@ public:
 private:
     string m_username;
     vector<Task> m_tasks;
-
     int login();
     void logout();
     void showHelp();

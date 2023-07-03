@@ -9,7 +9,7 @@ using namespace std;
 
 class Reminder {
 public:
-    Reminder(const vector<Task>& tasks);
+    Reminder(const string& filename);
     void start();
     void reminderbyId();
     void reminderbyDuetime();

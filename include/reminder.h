@@ -10,7 +10,6 @@ using namespace std;
 class Reminder {
 public:
     Reminder(const string& filename);
-    void start();
     void reminderbyId();
     void reminderbyDuetime();
     void scan();
@@ -19,7 +18,7 @@ public:
 private:
     vector<Task> Rem_tasks;
     bool compareTime(const string re_dueTime, const string re_currentTime);
-    bool isFileLocked(const std::string& filePath);
+    bool isFileLocked(const std::string& filename);
 };
 
 #endif // REMINDER_H

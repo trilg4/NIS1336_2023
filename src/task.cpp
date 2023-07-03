@@ -1,4 +1,4 @@
-#include "task.h"
+#include "../include/task.h"
 using namespace std;
 int Task::s_nextId = 1;
 
@@ -46,6 +46,14 @@ void Task::setReminderTime(const string& reminderTime){
     m_reminderTime = reminderTime;
 }
 
+bool Task::isReminded() const{
+    return m_reminded;
+}
+
+void Task::setReminded(bool reminded){
+    m_reminded = reminded;
+}
+
 void addTask(vector<Task>& tasks, const Task& task){
     tasks.push_back(task);
 }
@@ -64,8 +72,9 @@ vector<Task> loadTasksFromFile(const string& filename){
     vector<Task> t_list;
     ifstream infile(filename);
     if(!infile){
-        cerr<<"ERROR opening file "<<filename<<std::endl;
-        exit(-1);
+        ofstream outputfile("../data/"+filename);
+        vector<Task> new_list;
+        return new_list;
     }
     int tmp_id;
     string tmp_Name;

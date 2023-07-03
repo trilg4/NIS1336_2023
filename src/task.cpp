@@ -64,8 +64,9 @@ vector<Task> loadTasksFromFile(const string& filename){
     vector<Task> t_list;
     ifstream infile(filename);
     if(!infile){
-        cerr<<"ERROR opening file "<<filename<<std::endl;
-        exit(-1);
+        ofstream outputfile("../data/"+filename);
+        vector<Task> new_list;
+        return new_list;
     }
     int tmp_id;
     string tmp_Name;

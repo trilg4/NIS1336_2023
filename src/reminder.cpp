@@ -8,9 +8,13 @@
 
 Reminder::Reminder(const string& filename){
     Rem_Tasks = loadTasksFromFile(filename);
-    string re_filename = filename;
+    re_filename = filename;
 };
 //define a reminder object with a filename
+Reminder::Reminder(const vector<Task>& tlist){
+    Rem_Tasks = tlist;
+    re_filename = "";
+}
 
 
 void Reminder::reminderbyDuetime(){
@@ -44,14 +48,14 @@ void Reminder::scan(){ //may check every 15 minutes
     int fd = open("example.txt", O_RDWR);
     if (fd == -1) {
         std::cerr << "Failed to open the file." << std::endl;
-        return 1;
+        exit(1);
     }
 
     //lock the file
     if (flock(fd, LOCK_EX) == -1) {
         std::cerr << "Failed to acquire the lock." << std::endl;
         close(fd);
-        return 1;
+        exit(1);
     }
 
 

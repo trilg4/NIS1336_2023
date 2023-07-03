@@ -1,4 +1,4 @@
-#include "task.h"
+#include "../include/task.h"
 using namespace std;
 int Task::s_nextId = 1;
 
@@ -44,6 +44,14 @@ void Task::setCategory(Category category){
 
 void Task::setReminderTime(const string& reminderTime){
     m_reminderTime = reminderTime;
+}
+
+bool Task::isReminded() const{
+    return m_reminded;
+}
+
+void Task::setReminded(bool reminded){
+    m_reminded = reminded;
 }
 
 void addTask(vector<Task>& tasks, const Task& task){

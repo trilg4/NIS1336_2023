@@ -23,6 +23,7 @@ public:
         m_priority = priority;
         m_category = category;
         m_reminderTime = reminderTime;
+        m_reminded = false;
     }
     //创建Task生成新的id
     Task(const string& name = "",const string& startTime = "", Priority priority = Priority::MEDIUM, Category category = Category::LIFE, const string& reminderTime = ""){
@@ -33,6 +34,7 @@ public:
         m_priority = priority;
         m_category = category;
         m_reminderTime = reminderTime;
+        m_reminded = false;
     }
     const string& getName() const;
     const string& getStartTime() const;
@@ -40,12 +42,14 @@ public:
     Category getCategory() const;
     const string& getReminderTime() const;
     int getId() const;
+    bool isReminded () const;
     //更改task成员变量
     void setName(const string& name);
     void setStartTime(const string& startTime);
     void setPriority(Priority priority);
     void setCategory(Category category);
     void setReminderTime(const string& reminderTime);
+    void setReminded(bool reminded);
     friend void setNextId(const int next_id);
 private:
     static int s_nextId;
@@ -55,6 +59,7 @@ private:
     Priority m_priority;
     Category m_category;
     string m_reminderTime;
+    bool m_reminded;
     //时间格式：06/30/07/59 MM/DD/HH/mm M:month m:minute
     //文件格式：id name startTime priority category reminderTime
 };

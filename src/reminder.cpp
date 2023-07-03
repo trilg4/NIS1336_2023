@@ -1,4 +1,4 @@
-#include "reminder.h"
+#include "../include/reminder.h"
 #include <thread>
 #include <fstream>
 #include <fcntl.h>
@@ -17,7 +17,7 @@ void Reminder::reminderbyDuetime(){
     sort_by_reminderTime(Rem_Tasks);
     int numberofRem_Tasks = Rem_Tasks.size();
     for(int i =0;i<numberofRem_Tasks;i++){
-        std::cout<<Rem_Task[i].getId()<<" "<<Rem_Task[i].getName()<<" "<<Rem_Tasks[i].getReminderTime()<<std::endl;
+        std::cout<<Rem_Tasks[i].getId()<<" "<<Rem_Tasks[i].getName()<<" "<<Rem_Tasks[i].getReminderTime()<<std::endl;
     }
 }    
     
@@ -25,7 +25,7 @@ void Reminder::reminderbyId(){
     sort_by_id(Rem_Tasks);
     int numberofRem_Tasks = Rem_Tasks.size();
     for(int i = 0;i<numberofRem_Tasks;i++){
-        std::cout<<Rem_Tasks[i].getId()<<" "<<Rem_Task[i].getName()<<std::endl;
+        std::cout<<Rem_Tasks[i].getId()<<" "<<Rem_Tasks[i].getName()<<std::endl;
     }
 }
 
@@ -91,12 +91,12 @@ const string Reminder::getCurrentTime() const{
     std::strftime(formattedTime, sizeof(formattedTime), "%m/%d/%H/%M", localTime);
 
     // Print the formatted time
-    return formattedTime.c_str(); 
+    return formattedTime; 
 };
 
 
 bool Reminder::compareTime(const string re_dueTime, const string re_currentTime){
-    if(strcmp(re_dueTime,re_currentTime)==1||strcmp(re_dueTime,re_currentTime)==0) {
+    if(re_dueTime >= re_currentTime) {
         return false;// the task is not overdue
     }
     else 
@@ -104,7 +104,7 @@ bool Reminder::compareTime(const string re_dueTime, const string re_currentTime)
 }
 
 bool Reminder::isFileLocked(const std::string& filePath) {
-    int fd = open(filePath, O_RDWR);
+    int fd = open(filePath.c_str(), O_RDWR);
     if (fd == -1) {
         std::cerr << "Failed to open the file." << std::endl;
         return false;

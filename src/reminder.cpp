@@ -10,13 +10,14 @@ Reminder::Reminder(const string& filename){
     Rem_Tasks = loadTasksFromFile(filename);
     string re_filename = filename;
 };
+//define a reminder object with a filename
 
 
 void Reminder::reminderbyDuetime(){
     sort_by_reminderTime(Rem_Tasks);
     int numberofRem_Tasks = Rem_Tasks.size();
     for(int i =0;i<numberofRem_Tasks;i++){
-        std::cout<<Rem_Tasks[i].getReminderTime()<<std::endl;
+        std::cout<<Rem_Task[i].getId()<<" "<<Rem_Task[i].getName()<<" "<<Rem_Tasks[i].getReminderTime()<<std::endl;
     }
 }    
     
@@ -24,7 +25,7 @@ void Reminder::reminderbyId(){
     sort_by_id(Rem_Tasks);
     int numberofRem_Tasks = Rem_Tasks.size();
     for(int i = 0;i<numberofRem_Tasks;i++){
-        std::cout<<Rem_Tasks[i].getId()<<std::endl;
+        std::cout<<Rem_Tasks[i].getId()<<" "<<Rem_Task[i].getName()<<std::endl;
     }
 }
 
@@ -65,13 +66,12 @@ void Reminder::scan(){ //may check every 15 minutes
                 }
             }
         if (flock(fd, LOCK_UN) == -1) {
-            std::cerr << "Failed to release the lock." << std::endl;
+            std::cout << "Failed to release the lock." << std::endl;
             } 
         else {
         std::cout << "File unlocked successfully!" << std::endl;
         }
         close(fd);
-
     } 
  }  
 

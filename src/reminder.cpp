@@ -1,10 +1,10 @@
 #include "reminder.h"
-#include <chrono>
 #include <thread>
 #include <fstream>
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/file.h>
+#include <cerrno>
 
 Reminder::Reminder(const string& filename){
     Rem_Tasks = loadTasksFromFile(filename);
@@ -30,11 +30,11 @@ void Reminder::reminderbyId(){
 
 
 
-void Reminder::scan(){ //may check every 15 mins
+void Reminder::scan(){ //may check every 15 minutes
     
  
  while(true){
-    while("the file is locked" ){
+    while(isFileLocked(re_filename) ){
         std::this_thread::sleep_for(std::chrono::seconds(60));
     }        //to check the tasklist periodically
 
@@ -54,7 +54,7 @@ void Reminder::scan(){ //may check every 15 mins
     }
 
 
-    if("the file is locked"){
+    if(isFileLocked(re_filename)){
         Rem_Tasks = loadTasksFromFile(re_filename);
             int numberofTasks = Rem_Tasks.size();
             for(int i=0;i<numberofTasks;i++){
@@ -101,4 +101,34 @@ bool Reminder::compareTime(const string re_dueTime, const string re_currentTime)
     }
     else 
     {return true;} //the task is overdue
+}
+
+bool isFileLocked(const std::string& filePath) {
+    int fd = open(filePath, O_RDWR);
+    if (fd == -1) {
+        std::cerr << "Failed to open the file." << std::endl;
+        return false;
+    }
+
+    // Attempt to acquire a non-blocking exclusive write lock
+    if (flock(fd, LOCK_EX | LOCK_NB) == -1) {
+        if (errno == EWOULDBLOCK) {
+            // The file is already locked
+            close(fd);
+            return true;
+        } else {
+            // An error occurred while acquiring the lock
+            std::cerr << "Failed to acquire the lock." << std::endl;
+            close(fd);
+            return false;
+        }
+    }
+
+    // Release the lock
+    if (flock(fd, LOCK_UN) == -1) {
+        std::cerr << "Failed to release the lock." << std::endl;
+    }
+
+    close(fd);
+    return false;
 }

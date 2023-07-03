@@ -103,7 +103,7 @@ bool Reminder::compareTime(const string re_dueTime, const string re_currentTime)
     {return true;} //the task is overdue
 }
 
-bool isFileLocked(const std::string& filePath) {
+bool Reminder::isFileLocked(const std::string& filePath) {
     int fd = open(filePath, O_RDWR);
     if (fd == -1) {
         std::cerr << "Failed to open the file." << std::endl;

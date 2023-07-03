@@ -82,8 +82,9 @@ vector<Task> loadTasksFromFile(const string& filename){
     int tmp_priority;
     int tmp_category;
     string tmp_reminderTime;
-    
-    while(infile >> tmp_id >> tmp_Name >> tmp_startTime >> tmp_priority >> tmp_category >> tmp_reminderTime){
+    bool tmp_reminded;
+
+    while(infile >> tmp_id >> tmp_Name >> tmp_startTime >> tmp_priority >> tmp_category >> tmp_reminderTime >> tmp_reminded){
         Task tmp(tmp_id, tmp_Name, tmp_startTime, (Priority)tmp_priority, (Category)tmp_category, tmp_reminderTime);
         t_list.push_back(tmp);
     }
@@ -102,7 +103,8 @@ bool saveTasksToFile(const vector<Task>& tasks, const string& filename){
             << tmp.getStartTime() << " "
             << (int)tmp.getPriority() << " "
             << (int)tmp.getCategory() << " "
-            << tmp.getReminderTime() << " " <<endl;
+            << tmp.getReminderTime() << " " 
+            << tmp.isReminded() << " " <<endl;
         }
         outputFile.close();
         return true;
@@ -118,6 +120,7 @@ void printTasks(const vector<Task>& tasks){
         <<setw(3)<<"Priority"
         <<setw(3)<<"Category"
         <<setw(15)<<"Reminder Time"
+        <<setw(3)<<"Reminded"
         <<endl;
     for(auto it = tasks.begin() ; it < tasks.end() ; it++){
         cout<<setw(5) << (*it).getId()
@@ -126,6 +129,7 @@ void printTasks(const vector<Task>& tasks){
             <<setw(3) << (int)(*it).getPriority()
             <<setw(3) << (int)(*it).getCategory()
             <<setw(15) << (*it).getReminderTime()
+            <<setw(3) << (*it).isReminded()
             <<endl;
     }
 }

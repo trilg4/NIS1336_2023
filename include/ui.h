@@ -14,12 +14,12 @@ private:
     string m_username;
     vector<Task> m_tasks;
 
-    bool login();
+    int login();
     void logout();
-    void showMenu();
+    void showHelp();
     void showTasks();
-    void addTask();
-    void deleteTask();
+    void ui_addTask(const string& name,const string& startTime, Priority priority = Priority::MEDIUM, Category category = Category::LIFE, const string& reminderTime = "");
+    void ui_deleteTask(int taskId);
     void showTasksByDate();
     void printReminder(const Task task);
 };

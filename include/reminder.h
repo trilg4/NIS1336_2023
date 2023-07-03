@@ -9,16 +9,17 @@ using namespace std;
 
 class Reminder {
 public:
-    Reminder(const string& filename);
+    Reminder(const vector<Task>& tasks);
+    void start();
     void reminderbyId();
     void reminderbyDuetime();
     void scan();
     const string getCurrentTime() const;
-
+    
 private:
-    vector<Task> Rem_tasks;
+    vector<Task> Rem_Tasks;
     bool compareTime(const string re_dueTime, const string re_currentTime);
-    bool isFileLocked(const std::string& filename);
+    bool isFileLocked(const std::string& filePath);
 };
 
 #endif // REMINDER_H

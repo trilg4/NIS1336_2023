@@ -7,6 +7,7 @@
 #include <iomanip>
 #include <openssl/md5.h>
 #include <cstring>
+#include <sstream>
 using namespace std;
 
 class User {
@@ -38,8 +39,7 @@ private:
         // TODO: Implement password encryption or hashing algorithm here
         unsigned char digest[MD5_DIGEST_LENGTH];
         MD5(reinterpret_cast<const unsigned char*>(password.c_str()),password.length(),digest);
-
-        stringstream ss;
+        std::stringstream ss;
         for(int i=0;i<MD5_DIGEST_LENGTH;++i) {
             ss<<hex<<setw(2)<<setfill('0')<<static_cast<int>(digest[i]);
         }
@@ -48,7 +48,6 @@ private:
     int m_uid;
     static int s_nextuid;
 };
-
 //vector<User> loadTasksFromFile(const string& filename);
 //bool saveTasksToFile(const vector<User>& tasks, const string& filename);
 int userLogin();
@@ -56,4 +55,5 @@ bool saveUserToFile(vector<User>& ulist);
 void loadUserFromFile(vector<User>& ulist);
 void sort_by_uid(vector<User>& ulist);
 void setNextUid(const int next_id);
+
 #endif // USER_H

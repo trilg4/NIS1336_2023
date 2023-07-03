@@ -1,4 +1,5 @@
-#include "ui.h"
+
+#include "../include/ui.h"
 #include "account.h"
 #include "task.h"
 #include "reminder.h"
@@ -81,3 +82,4 @@ void UI::printReminder(const Task task){
     //t_list.start();
 
 }
+

@@ -2,7 +2,7 @@
 #include "../include/task.h"
 
 using namespace std;
-
+int User::s_nextuid = 1;
 
 bool saveUserToFile(vector<User>& ulist) {
     ofstream outputfile ("../data/userinfo.txt");
@@ -21,7 +21,6 @@ bool saveUserToFile(vector<User>& ulist) {
 }
 
 void loadUserFromFile(vector<User>& ulist) {
-    vector<User> ulist;
     ifstream infile("../data/userinfo.txt");
     if(!infile){
        ofstream outputfile("../data/userinfo.txt");
@@ -41,12 +40,12 @@ void loadUserFromFile(vector<User>& ulist) {
     setNextUid((*(ulist.end()-1)).getUid()+1);
 }
 
-void sort_by_uid(vector<User>& ulist) {
-    sort(ulist.begin(), ulist.end(), uid_compare);
-}
-
 bool uid_compare(User a, User b){
     return a.getUid() < b.getUid();
+}
+
+void sort_by_uid(vector<User>& ulist) {
+    sort(ulist.begin(), ulist.end(), uid_compare);
 }
 
 void setNextUid(const int next_id) {

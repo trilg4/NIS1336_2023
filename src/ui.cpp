@@ -18,6 +18,7 @@ string filename = "../data/tasks.json";
 vector<Task> t_list;
 
 void UI::run(){
+    int userLoggedIn = 0;
     while (!userLoggedIn) {userLoggedIn = userLogin();}
     t_list = loadTasksFromFile(filename);
     bool flag = true;
@@ -40,7 +41,7 @@ int UI::login(){
 }
 
 void UI::logout(){
-    userLogout();
+    //remain to be completed
 }
 
 void UI::showHelp(){
@@ -54,7 +55,7 @@ void UI::showTasks(){
     printTasks(t_list);
 }
 
-void UI::ui_addTask(const string& name,const string& startTime, Priority priority = Priority::MEDIUM, Category category = Category::LIFE, const string& reminderTime = ""){
+void UI::ui_addTask(const string& name,const string& startTime, Priority priority , Category category , const string& reminderTime ){
     Task temp = Task(name, startTime, priority, category, reminderTime);
     //t_list.push_back(temp);
     addTask(t_list, temp);

@@ -59,8 +59,10 @@ private:
     Priority m_priority;
     Category m_category;
     string m_reminderTime;
+
     bool m_reminded;
-    //时间格式：06/30/07/59 MM/DD/HH/mm M:month m:minute
+    //时间格式：06/30/07/59 MM/DD/HH/mm M:month m:minute //transform the date to the exact number of days, transform the hours and minutes to the exact 
+
     //文件格式：id name startTime priority category reminderTime
 };
 

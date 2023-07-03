@@ -1,4 +1,4 @@
-#include "reminder.h"
+#include "../include/reminder.h"
 
 
 Reminder::Reminder(const string& filename){

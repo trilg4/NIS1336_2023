@@ -19,6 +19,7 @@ public:
 private:
     vector<Task> Rem_tasks;
     bool compareTime(const string re_dueTime, const string re_currentTime);
+    bool isFileLocked(const std::string& filePath);
 };
 
 #endif // REMINDER_H

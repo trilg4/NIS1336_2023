@@ -15,7 +15,6 @@ private:
     vector<Task> m_tasks;
 
     bool login();
-    void logout();
     void showMenu() const;
     void showTasks() const;
     void addTask();

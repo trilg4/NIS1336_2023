@@ -10,13 +10,15 @@ using namespace std;
 class Reminder {
 public:
     Reminder(const vector<Task>& tasks);
-
     void start();
+    void reminderbyId();
+    void reminderbyDuetime();
+    void scan();
+    const string getCurrentTime() const;
 
 private:
-    vector<Task> m_tasks;
-
-    chrono::system_clock::time_point getCurrentTime() const;
+    vector<Task> Rem_tasks;
+    bool compareTime(const string re_dueTime, const string re_currentTime);
 };
 
 #endif // REMINDER_H

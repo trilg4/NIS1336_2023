@@ -2,7 +2,7 @@
 
 
 Reminder::Reminder(const string& filename){
-    vector<Task> Rem_Tasks = loadTasksFromFile(filename);
+    Rem_Tasks = loadTasksFromFile(filename);
 };
 
 
@@ -24,8 +24,8 @@ void Reminder::reminderbyId(){
 
 
 
-void scan(vector<Task> tasks){ //may check every 15 mins
-    int numberofTasks = tasks.size();
+void scan(){ //may check every 15 mins
+    int numberofTasks = Rem_Tasks.size();
 
 
     //static int *overdue = new int[numberofTask]{0}; // initial state 
@@ -34,9 +34,9 @@ void scan(vector<Task> tasks){ //may check every 15 mins
         //lock the file from the frontground
         while(){
             for(int i=0;i<numberofTasks;i++){
-             if(compareTime(tasks[i].getReminderTime(),getCurrentTime())&&tasks[i].overdue)
+             if(compareTime(Rem_Tasks[i].getReminderTime(),getCurrentTime())&&Rem_Tasks[i].overdue)
               {
-                   std::cout<<tasks[i].getId()<<tasks[i].getName()<<tasks[i].getReminderTime()<<std::endl;
+                   std::cout<<Rem_Tasks[i].getId()<<Rem_Tasks[i].getName()<<Rem_Tasks[i].getReminderTime()<<std::endl;
                    tasks[i].overdue = 0;
                 }
           }

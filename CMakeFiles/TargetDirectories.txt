@@ -1,0 +1,3 @@
+/home/cyz/NIS1336/NIS_2023/NIS1336_2023/CMakeFiles/rebuild_cache.dir
+/home/cyz/NIS1336/NIS_2023/NIS1336_2023/CMakeFiles/edit_cache.dir
+/home/cyz/NIS1336/NIS_2023/NIS1336_2023/CMakeFiles/todo.dir

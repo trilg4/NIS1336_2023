@@ -84,3 +84,24 @@ void UI::printReminder(const Task task){
 
 }
 
+bool isValidTime(const string& timeString){
+    tm timeStruct = {};
+    istringstream iss(timeString);
+
+    // Set the input format as MM/DD/hh/mm
+    iss >> get_time(&timeStruct, "%m/%d/%H/%M");
+
+    // Check if the parsing was successful and the entire string was consumed
+    return !iss.fail() && iss.eof();
+}
+
+bool isValidDate(const string& dateString){
+    tm timeStruct = {};
+    istringstream iss(dateString);
+
+    // Set the input format as MM/DD/hh/mm
+    iss >> get_time(&timeStruct, "%m/%d");
+
+    // Check if the parsing was successful and the entire string was consumed
+    return !iss.fail() && iss.eof();
+}

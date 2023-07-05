@@ -55,6 +55,7 @@ void Task::setReminded(bool reminded){
 }
 
 void addTask(vector<Task>& tasks, const Task& task){
+    //TODO: add a check to ensure task name and startTime is unique
     tasks.push_back(task);
 }
 

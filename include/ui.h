@@ -4,12 +4,14 @@
 #include <string>
 #include <vector>
 #include "task.h"
+#include <mutex>
+
+extern std::mutex filemutex;
 using namespace std;
 
 class UI {
 public:
     void run();
-    vector<Task> t_list;
     string filename;
 
 private:
@@ -21,6 +23,8 @@ private:
     void showTasksByDate();
     void undoTask();
     void doTask();
-};
+    
 
+};
+bool ui_isFileLocked(const std::string& filePath);
 #endif // UI_H

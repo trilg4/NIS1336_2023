@@ -3,6 +3,8 @@
 #include "./include/task.h"
 #include "./include/reminder.h"
 #include "./include/ui.h"
+std::mutex filemutex;
+vector<Task> t_list;
 using namespace std;
 
 int main(int argc, char* argv[]) {

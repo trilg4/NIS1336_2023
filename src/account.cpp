@@ -89,12 +89,17 @@ int userLogin() {
                 return new_user.getUid();
             }
         }
-
-
     }
-    
-
-
-
 }
 
+int userLogin(string username, string password){
+    vector<User> ulist;
+    loadUserFromFile(ulist);
+    User tmp_user(username, password, -1);
+    for(auto it = ulist.begin() ; it < ulist.end() ; it++){
+        if(username == (*it).getUsername() && tmp_user.getPasswordHash() == (*it).getPasswordHash()){
+            return (*it).getUid();
+        }
+    }
+    return -1;
+}

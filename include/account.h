@@ -12,15 +12,17 @@ using namespace std;
 
 class User {
 public:
-    User(const string& username, const string& password, int uid)
+    //to load users
+    User(const string& username, const string& passwordHash, int uid)
     {
         m_username = username;
-        m_passwordHash =encryptPassword(password);
+        m_passwordHash = passwordHash;
         m_uid=uid;
     }
+    //to create new user
     User(const string& username, const string& password){
         m_username = username;
-        m_passwordHash =encryptPassword(password);
+        m_passwordHash = encryptPassword(password);
         m_uid=s_nextuid;
         s_nextuid++;
     }
@@ -31,10 +33,6 @@ public:
         return m_passwordHash == encryptPassword(password);
     }
     friend void setNextUid(const int next_id);
-private:
-    string m_username;
-    string m_passwordHash;
-
     string encryptPassword(const string& password) const {
         // TODO: Implement password encryption or hashing algorithm here
         unsigned char digest[MD5_DIGEST_LENGTH];
@@ -45,6 +43,11 @@ private:
         }
         return ss.str();
     }
+private:
+    string m_username;
+    string m_passwordHash;
+
+    
     int m_uid;
     static int s_nextuid;
 };
@@ -55,5 +58,5 @@ bool saveUserToFile(vector<User>& ulist);
 void loadUserFromFile(vector<User>& ulist);
 void sort_by_uid(vector<User>& ulist);
 void setNextUid(const int next_id);
-
+string toEncrypt(const string& password);
 #endif // USER_H

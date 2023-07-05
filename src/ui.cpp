@@ -15,14 +15,13 @@ using namespace std;
 
 
 void UI::run(){
-    int userLoggedIn = 0;
-    while (!userLoggedIn) {userLoggedIn = userLogin();}
+    int userLoggedIn = userLogin();
     filename  = to_string(userLoggedIn) + ".txt" ;
     t_list = loadTasksFromFile(filename);
     bool flag = true;
     int userOption = 0;
-    Reminder reminder(t_list);
-    thread check(&Reminder::scan,&reminder);
+    Reminder reminder(filename);
+    //thread check(&Reminder::scan,&reminder);
     while(flag){
         string command;
         showHelp();
@@ -63,7 +62,7 @@ void UI::run(){
                 break;
             }
             case 7:{
-                check.join();
+                //check.join();
                 saveTasksToFile(t_list,filename);
                 return;
             }
@@ -79,7 +78,7 @@ void UI::showHelp(){
     cout << "Options:" << endl;
     cout << "addTask " << "deleteTask "
          << "viewTask " << "viewTaskByDate "
-         << "undoTask " << "doTask" <<endl;
+         << "undoTask " << "doTask " << "logOut" <<endl;
 }
 
 void UI::showTasks(){
@@ -97,6 +96,7 @@ void UI::ui_addTask(){
     int tmp_Priority;
     int tmp_Category;
     string tmp_reminderTime;
+    cin>> tmp_name >> tmp_startTime >> tmp_Priority >> tmp_Category >> tmp_reminderTime;
     Task tmp(tmp_name, tmp_startTime, (Priority)tmp_Priority, (Category)tmp_Category, tmp_reminderTime);
     addTask(t_list, tmp);
     saveTasksToFile(t_list, filename);

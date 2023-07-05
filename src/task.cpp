@@ -69,14 +69,14 @@ bool deleteTask(vector<Task>& tasks, int taskId){
 }
 
 vector<Task> loadTasksFromFile(const string& filename){
-    int fileDescriptor = open(("../data/"+filename).c_str(), O_WRONLY | O_APPEND);
+    /*int fileDescriptor = open(("../data/"+filename).c_str(), O_WRONLY | O_APPEND);
     while (fileDescriptor == -1) {
         this_thread::sleep_for(std::chrono::seconds(5));
     }
     while (!lockFile(fileDescriptor)) {
         this_thread::sleep_for(std::chrono::seconds(5));
     }
-
+    */
     vector<Task> t_list;
     ifstream infile(filename);
     if(!infile){
@@ -98,19 +98,20 @@ vector<Task> loadTasksFromFile(const string& filename){
     }
     sort_by_id(t_list);
     setNextId((*(t_list.end()-1)).getId()+1);
-    unlockFile(fileDescriptor);
-    close(fileDescriptor);
+    //unlockFile(fileDescriptor);
+    //close(fileDescriptor);
     return t_list;
 }
 
 bool saveTasksToFile(const vector<Task>& tasks, const string& filename){
-    int fileDescriptor = open(("../data/"+filename).c_str(), O_WRONLY | O_TRUNC);
+    /*int fileDescriptor = open(("../data/"+filename).c_str(), O_WRONLY | O_TRUNC);
     if (fileDescriptor == -1) {
         this_thread::sleep_for(std::chrono::seconds(5));
     }
     if (!lockFile(fileDescriptor)) {
         this_thread::sleep_for(std::chrono::seconds(5));
     }
+    */
     ofstream outputFile("../data/"+filename);
     if(outputFile.is_open()){
         for(const auto& tmp : tasks){
@@ -124,8 +125,8 @@ bool saveTasksToFile(const vector<Task>& tasks, const string& filename){
             << tmp.isReminded() << " " <<endl;
         }
         outputFile.close();
-        unlockFile(fileDescriptor);
-        close(fileDescriptor);
+        //unlockFile(fileDescriptor);
+        //close(fileDescriptor);
         return true;
     }
     return false;

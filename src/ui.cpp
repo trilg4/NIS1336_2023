@@ -10,9 +10,13 @@
 #include <fcntl.h>
 #include <fstream>
 #include <thread>
+#include <sys/file.h>
+#include <cerrno>
+#include <mutex>
 using namespace std;
 
-
+extern std::mutex filemutex;
+extern vector<Task> t_list;
 
 void UI::run(){
     int userLoggedIn = userLogin();
@@ -21,7 +25,9 @@ void UI::run(){
     bool flag = true;
     int userOption = 0;
     Reminder reminder(filename);
-    //thread check(&Reminder::scan,&reminder);
+    thread check(&Reminder::scan, &reminder);
+    check.detach();
+    std::this_thread::sleep_for(std::chrono::seconds(2));
     while(flag){
         string command;
         showHelp();
@@ -35,6 +41,7 @@ void UI::run(){
         else if(strcasecmp(command.c_str(), "logOut") == 0) userOption = 7;
         switch(userOption){
             case 1:{
+                
                 ui_addTask();
                 break;
             }
@@ -42,7 +49,9 @@ void UI::run(){
                 int tmp_id;
                 cout<<"Please input the task id: "<<endl;
                 cin>>tmp_id;
+                filemutex.lock();
                 ui_deleteTask(tmp_id);
+                filemutex.unlock();
                 break;
             }
             case 3:{
@@ -98,14 +107,14 @@ void UI::ui_addTask(){
     string tmp_reminderTime;
     cin>> tmp_name >> tmp_startTime >> tmp_Priority >> tmp_Category >> tmp_reminderTime;
     Task tmp(tmp_name, tmp_startTime, (Priority)tmp_Priority, (Category)tmp_Category, tmp_reminderTime);
-    addTask(t_list, tmp);
-    saveTasksToFile(t_list, filename);
+    addTask(t_list, tmp);  
 }
 
 void UI::ui_deleteTask(int taskId){
     bool flag = deleteTask(t_list, taskId);
     if(flag){
         cout << "Successfully deleted task " << taskId << ". " << endl;
+        saveTasksToFile(t_list, filename);
         return;
     }
     if(!flag){
@@ -133,6 +142,7 @@ void UI::undoTask(){
             (*it).setReminded(false);
         }
     }
+
     saveTasksToFile(t_list,filename);
 }
 
@@ -148,3 +158,32 @@ void UI::doTask(){
     saveTasksToFile(t_list,filename);
 }
 
+bool ui_isFileLocked(const std::string& filePath){
+    int fd = open(filePath.c_str(), O_RDWR);
+    if (fd == -1) {
+        std::cerr << "Failed to open the file." << std::endl;
+        return false;
+    }
+
+    // Attempt to acquire a non-blocking exclusive write lock
+    if (flock(fd, LOCK_EX | LOCK_NB) == -1) {
+        if (errno == EWOULDBLOCK) {
+            // The file is already locked
+            close(fd);
+            return true;
+        } else {
+            // An error occurred while acquiring the lock
+            std::cerr << "Failed to acquire the lock." << std::endl;
+            close(fd);
+            return false;
+        }
+    }
+
+    // Release the lock
+    if (flock(fd, LOCK_UN) == -1) {
+        std::cerr << "Failed to release the lock." << std::endl;
+    }
+
+    close(fd);
+    return false;
+}

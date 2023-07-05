@@ -6,6 +6,9 @@
 #include "./include/reminder.h"
 #include "./include/ui.h"
 
+std::mutex filemutex;
+vector<Task> t_list;
+
 using namespace std;
 
 extern int userLogin(string username, string password);

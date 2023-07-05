@@ -1,6 +1,9 @@
 #include "../include/task.h"
+#include <mutex>
 using namespace std;
 int Task::s_nextId = 1;
+
+extern std::mutex filemutex;
 
 const string& Task::getName() const{
     return m_name;
@@ -71,17 +74,20 @@ bool deleteTask(vector<Task>& tasks, int taskId){
 vector<Task> loadTasksFromFile(const string& filename){
     /*int fileDescriptor = open(("../data/"+filename).c_str(), O_WRONLY | O_APPEND);
     while (fileDescriptor == -1) {
+        cout<<"in loadTask fail to open "<<filename;
         this_thread::sleep_for(std::chrono::seconds(5));
     }
     while (!lockFile(fileDescriptor)) {
         this_thread::sleep_for(std::chrono::seconds(5));
     }
     */
+    filemutex.lock();
     vector<Task> t_list;
     ifstream infile(filename);
     if(!infile){
-        ofstream outputfile("../data/"+filename);
+        //ofstream outputfile("../data/"+filename);
         vector<Task> new_list;
+        filemutex.unlock();
         return new_list;
     }
     int tmp_id;
@@ -96,22 +102,26 @@ vector<Task> loadTasksFromFile(const string& filename){
         Task tmp(tmp_id, tmp_Name, tmp_startTime, (Priority)tmp_priority, (Category)tmp_category, tmp_reminderTime);
         t_list.push_back(tmp);
     }
+    filemutex.unlock();
     sort_by_id(t_list);
     setNextId((*(t_list.end()-1)).getId()+1);
     //unlockFile(fileDescriptor);
     //close(fileDescriptor);
+    
     return t_list;
 }
 
 bool saveTasksToFile(const vector<Task>& tasks, const string& filename){
     /*int fileDescriptor = open(("../data/"+filename).c_str(), O_WRONLY | O_TRUNC);
     if (fileDescriptor == -1) {
+        cout<<"in saveTask fail to open "<<filename;
         this_thread::sleep_for(std::chrono::seconds(5));
     }
     if (!lockFile(fileDescriptor)) {
+        cout<<"in saveTask fail to lock "<<filename;
         this_thread::sleep_for(std::chrono::seconds(5));
-    }
-    */
+    }*/
+    filemutex.lock();
     ofstream outputFile("../data/"+filename);
     if(outputFile.is_open()){
         for(const auto& tmp : tasks){
@@ -124,9 +134,11 @@ bool saveTasksToFile(const vector<Task>& tasks, const string& filename){
             << tmp.getReminderTime() << " " 
             << tmp.isReminded() << " " <<endl;
         }
+        outputFile.flush();
         outputFile.close();
         //unlockFile(fileDescriptor);
         //close(fileDescriptor);
+        filemutex.unlock();
         return true;
     }
     return false;

@@ -78,11 +78,11 @@ int userLogin() {
         }
     //not found
         while(1) {
-            cout<<"user not found\n option: 0.return to the login interface\n 1.create a new account \n";
+            cout<<"user not found\n option:\n 0.return to the login interface\n 1.create a new account \n";
             int option;
             cin>>option;
-            if(option==0) break;
-            else if(option==1){
+            if(option == 0) break;
+            else if(option == 1){
                 User new_user(username,password);
                 ulist.push_back(new_user);
                 saveUserToFile(ulist);

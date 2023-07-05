@@ -11,6 +11,8 @@ using namespace std;
 extern int userLogin(string username, string password);
 extern bool isValidTime(const string& timeString);
 extern bool isValidDate(const string& dateString);
+extern bool doTask(vector<Task> t_list, int taskId, string filename);
+extern bool undoTask(vector<Task> t_list, int taskId, string filename);
 
 int main(int argc, char* argv[]) {
     if(argc == 1){
@@ -37,7 +39,7 @@ int main(int argc, char* argv[]) {
             else if (strcasecmp(operation.c_str(), "doTask") == 0) userOption = 5;
             else if (strcasecmp(operation.c_str(), "undoTask") == 0) userOption = 6;
             switch(userOption){
-                case 0: cout << "Command unknown. Plese check your input." << endl; exit(404); break;
+                case 0: {cout << "Command unknown. Plese check your input." << endl; exit(404); break;}
                 case 1: {
                     string name, startTime, pri, cate, remindTime;
                     cin >> name >> startTime >> pri >> cate >> remindTime;
@@ -77,6 +79,7 @@ int main(int argc, char* argv[]) {
                     vector<Task> t_list = loadTasksFromFile(filename);
                     printTasks(t_list);
                     //TODO: unlock the database file
+                    break;
                 }
                 case 4:{
                     string date;
@@ -90,9 +93,32 @@ int main(int argc, char* argv[]) {
                     break;
                 }
                 case 5:{
-                    
+                    int taskId;
+                    cin >> taskId;
+                    //TODO: add error handling
+                    //TODO: lock the database file
+                    vector<Task> t_list = loadTasksFromFile(filename);
+                    bool flag = doTask(t_list, taskId, filename);
+                    //TODO: unlock the database file
+                    if(flag) {cout << "Successfully set task " << taskId << " as done. " << endl;}
+                    else {cout << "Failed to set task " << taskId << "as done. Please check your input. "; exit(404);}
+                    break;
                 }
+                case 6:{
+                    int taskId;
+                    cin >> taskId;
+                    //TODO: add error handling
+                    //TODO: lock the database file
+                    vector<Task> t_list = loadTasksFromFile(filename);
+                    bool flag = undoTask(t_list, taskId, filename);
+                    //TODO: unlock the database file
+                    if(flag) {cout << "Successfully set task " << taskId << " as undone. " << endl;}
+                    else {cout << "Failed to set task " << taskId << "as undone. Please check your input. "; exit(404);}
+                    break;
+                }
+                default:{{cout << "An error occurred. Plese check your input." << endl; exit(404); break;}}
             }
         }
+    exit(0);
     }
 }

@@ -169,3 +169,29 @@ bool isValidDate(const string& dateString){
     // Check if the parsing was successful and the entire string was consumed
     return !iss.fail() && iss.eof();
 }
+
+bool doTask(vector<Task> t_list, int taskId, string filename){
+    bool flag = false;
+    for(auto it = t_list.begin() ; it < t_list.end() ; it++){
+        if((*it).getId() == taskId){
+            (*it).setReminded(true);
+            flag = true;
+            break;
+        }
+    }
+    saveTasksToFile(t_list,filename);
+    return flag;
+}
+
+bool undoTask(vector<Task> t_list, int taskId, string filename){
+    bool flag = false;
+    for(auto it = t_list.begin() ; it < t_list.end() ; it++){
+        if((*it).getId() == taskId){
+            (*it).setReminded(false);
+            flag = true;
+            break;
+        }
+    }
+    saveTasksToFile(t_list,filename);
+    return flag;
+}

@@ -7,6 +7,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 # Find the required libraries
 find_package(OpenSSL REQUIRED)
+find_package(Threads REQUIRED)
 
 # Add the include directories for OpenSSL
 include_directories(${OPENSSL_INCLUDE_DIR})
@@ -26,8 +27,5 @@ set(SOURCES
 # Create executable
 add_executable(todo ${SOURCES})
 
-# Set output directory for executable
-set_target_properties(todo PROPERTIES RUNTIME_OUTPUT_DIRECTORY "build")
-
 # Link against the OpenSSL library
-target_link_libraries(${PROJECT_NAME} OpenSSL::SSL OpenSSL::Crypto)
+target_link_libraries(${PROJECT_NAME} OpenSSL::SSL OpenSSL::Crypto Threads::Threads)

@@ -69,6 +69,14 @@ bool deleteTask(vector<Task>& tasks, int taskId){
 }
 
 vector<Task> loadTasksFromFile(const string& filename){
+    /*int fileDescriptor = open(("../data/"+filename).c_str(), O_WRONLY | O_APPEND);
+    while (fileDescriptor == -1) {
+        this_thread::sleep_for(std::chrono::seconds(5));
+    }
+    while (!lockFile(fileDescriptor)) {
+        this_thread::sleep_for(std::chrono::seconds(5));
+    }
+    */
     vector<Task> t_list;
     ifstream infile(filename);
     if(!infile){
@@ -90,11 +98,21 @@ vector<Task> loadTasksFromFile(const string& filename){
     }
     sort_by_id(t_list);
     setNextId((*(t_list.end()-1)).getId()+1);
+    //unlockFile(fileDescriptor);
+    //close(fileDescriptor);
     return t_list;
 }
 
 bool saveTasksToFile(const vector<Task>& tasks, const string& filename){
-    ofstream outputFile(filename);
+    /*int fileDescriptor = open(("../data/"+filename).c_str(), O_WRONLY | O_TRUNC);
+    if (fileDescriptor == -1) {
+        this_thread::sleep_for(std::chrono::seconds(5));
+    }
+    if (!lockFile(fileDescriptor)) {
+        this_thread::sleep_for(std::chrono::seconds(5));
+    }
+    */
+    ofstream outputFile("../data/"+filename);
     if(outputFile.is_open()){
         for(const auto& tmp : tasks){
             outputFile
@@ -107,6 +125,8 @@ bool saveTasksToFile(const vector<Task>& tasks, const string& filename){
             << tmp.isReminded() << " " <<endl;
         }
         outputFile.close();
+        //unlockFile(fileDescriptor);
+        //close(fileDescriptor);
         return true;
     }
     return false;
@@ -166,4 +186,22 @@ void sort_by_reminderTime(vector<Task>& tasks){
 
 void setNextId(const int next_id){
     Task::s_nextId = next_id;
+}
+
+bool lockFile(int fileDescriptor) {
+    struct flock fl;
+    fl.l_type = F_WRLCK;
+    fl.l_whence = SEEK_SET;
+    fl.l_start = 0;
+    fl.l_len = 0; // Lock the entire file
+    return fcntl(fileDescriptor, F_SETLK, &fl) != -1;
+}
+
+void unlockFile(int fileDescriptor) {
+    struct flock fl;
+    fl.l_type = F_UNLCK;
+    fl.l_whence = SEEK_SET;
+    fl.l_start = 0;
+    fl.l_len = 0; // Unlock the entire file
+    fcntl(fileDescriptor, F_SETLK, &fl);
 }

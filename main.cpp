@@ -1,10 +1,11 @@
 #include <iostream>
 #include <string>
 #include <cstring>
-#include "account.h"
-#include "task.h"
-#include "reminder.h"
-#include "ui.h"
+#include "./include/account.h"
+#include "./include/task.h"
+#include "./include/reminder.h"
+#include "./include/ui.h"
+
 using namespace std;
 
 extern int userLogin(string username, string password);

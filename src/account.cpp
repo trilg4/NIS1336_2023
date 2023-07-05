@@ -17,15 +17,15 @@ bool saveUserToFile(vector<User>& ulist) {
         outputfile.close();
         return true;
     }
+    cout<<"err create"<<endl;
     return false;
 }
 
 void loadUserFromFile(vector<User>& ulist) {
     ifstream infile("../data/userinfo.txt");
     if(!infile){
-       ofstream outputfile("../data/userinfo.txt");
+       cout<<"err opening userinfo"<<endl;
        return;
-
     }
     int tmp_uid;
     string tmp_userName;
@@ -70,7 +70,7 @@ int userLogin() {
         cout<<"password: "<<endl;
         string password;
         cin>>password;
-        User tmp_user(username, password, -1);
+        User tmp_user(username, toEncrypt(password), -1);
         for(auto it = ulist.begin() ; it < ulist.end() ; it++){
             if(username == (*it).getUsername() && tmp_user.getPasswordHash() == (*it).getPasswordHash()){
                 return (*it).getUid();
@@ -78,18 +78,30 @@ int userLogin() {
         }
     //not found
         while(1) {
-            cout<<"user not found\n option: 0.return to the login interface\n 1.create a new account \n";
+            cout<<"user not found\n option:\n 0.return to the login interface\n 1.create a new account \n";
             int option;
             cin>>option;
-            if(option==0) break;
-            else if(option==1){
+            if(option == 0) break;
+            else if(option == 1){
                 User new_user(username,password);
                 ulist.push_back(new_user);
                 saveUserToFile(ulist);
                 return new_user.getUid();
             }
         }
+    }    
+}
+
+string toEncrypt(const string& password){
+    unsigned char digest[MD5_DIGEST_LENGTH];
+    MD5(reinterpret_cast<const unsigned char*>(password.c_str()),password.length(),digest);
+    std::stringstream ss;
+    for(int i=0;i<MD5_DIGEST_LENGTH;++i) {
+        ss<<hex<<setw(2)<<setfill('0')<<static_cast<int>(digest[i]);
     }
+    return ss.str();
+}
+
 }
 
 int userLogin(string username, string password){

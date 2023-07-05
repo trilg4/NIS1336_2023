@@ -7,6 +7,9 @@
 #include <fstream>
 #include <iostream>
 #include <cstring>
+#include <fcntl.h>
+#include <unistd.h>
+#include <thread>
 using namespace std;
 /*-----------------------------*/
 //在使用vector时必须先进行load的操作
@@ -75,4 +78,6 @@ void printTasks(const vector<Task>& tasks); //打印所有任务信息
 void sort_by_id(vector<Task>& tasks); //任务列表按id升序
 void sort_by_reminderTime(vector<Task>& tasks); //任务列表按提醒时间升序
 void setNextId(const int next_id);
+bool lockFile(int fileDescriptor);
+void unlockFile(int fileDescriptor);
 #endif // TASK_H

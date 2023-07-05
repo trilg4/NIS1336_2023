@@ -40,13 +40,15 @@ void Reminder::scan(){ //may check every 15 minutes
  
  while(true){
     while(isFileLocked(re_filename) ){
-        std::this_thread::sleep_for(std::chrono::seconds(60));
+        std::this_thread::sleep_for(std::chrono::seconds(5));
     }        //to check the tasklist periodically
-
+    cout<<"SCANNING"<<endl;
+    std::this_thread::sleep_for(std::chrono::seconds(5));
 
     //open the file    
-    int fd = open("example.txt", O_RDWR);
+    int fd = open(("../data/" + re_filename).c_str(), O_RDWR);
     if (fd == -1) {
+        cout<<re_filename<<endl;
         std::cerr << "Failed to open the file." << std::endl;
         exit(1);
     }
@@ -71,9 +73,9 @@ void Reminder::scan(){ //may check every 15 minutes
             }
         if (flock(fd, LOCK_UN) == -1) {
             std::cout << "Failed to release the lock." << std::endl;
-            } 
+        } 
         else {
-        std::cout << "File unlocked successfully!" << std::endl;
+            std::cout << "File unlocked successfully!" << std::endl;
         }
         close(fd);
     } 

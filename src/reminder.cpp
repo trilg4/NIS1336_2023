@@ -5,6 +5,10 @@
 #include <unistd.h>
 #include <sys/file.h>
 #include <cerrno>
+#include <mutex>
+
+extern std::mutex filemutex;
+extern vector<Task> t_list;
 
 Reminder::Reminder(const string& filename){
     Rem_Tasks = loadTasksFromFile(filename);
@@ -39,46 +43,20 @@ void Reminder::scan(){ //may check every 15 minutes
     
  
  while(true){
-    while(isFileLocked(re_filename) ){
-        std::this_thread::sleep_for(std::chrono::seconds(5));
-    }        //to check the tasklist periodically
-    cout<<"SCANNING"<<endl;
-    std::this_thread::sleep_for(std::chrono::seconds(5));
-
-    //open the file    
-    int fd = open(("../data/" + re_filename).c_str(), O_RDWR);
-    if (fd == -1) {
-        cout<<re_filename<<endl;
-        std::cerr << "Failed to open the file." << std::endl;
-        exit(1);
-    }
-
-    //lock the file
-    if (flock(fd, LOCK_EX) == -1) {
-        std::cerr << "Failed to acquire the lock." << std::endl;
-        close(fd);
-        exit(1);
-    }
-
-
-    if(isFileLocked(re_filename)){
-        Rem_Tasks = loadTasksFromFile(re_filename);
-            int numberofTasks = Rem_Tasks.size();
-            for(int i=0;i<numberofTasks;i++){
-             if(compareTime(Rem_Tasks[i].getReminderTime(),getCurrentTime())&&!Rem_Tasks[i].isReminded())
-                {
-                   std::cout<<Rem_Tasks[i].getId()<<" "<<Rem_Tasks[i].getName()<<" "<<Rem_Tasks[i].getReminderTime()<<std::endl;
-                   Rem_Tasks[i].setReminded(true);
-                }
-            }
-        if (flock(fd, LOCK_UN) == -1) {
-            std::cout << "Failed to release the lock." << std::endl;
-        } 
-        else {
-            std::cout << "File unlocked successfully!" << std::endl;
+    this_thread::sleep_for(std::chrono::seconds(1));
+    filemutex.lock();
+    Rem_Tasks = t_list;
+    int numberofTasks = Rem_Tasks.size();
+    for(int i=0;i<numberofTasks;i++){
+        if(compareTime(Rem_Tasks[i].getReminderTime(),getCurrentTime())&&!Rem_Tasks[i].isReminded())
+        {
+            std::cout<<Rem_Tasks[i].getId()<<" "<<Rem_Tasks[i].getName()<<" "<<Rem_Tasks[i].getReminderTime()<<std::endl;
+            Rem_Tasks[i].setReminded(true);
         }
-        close(fd);
-    } 
+    }
+    t_list = Rem_Tasks;
+    filemutex.unlock();
+    
  }  
 
 };

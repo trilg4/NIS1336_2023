@@ -5,8 +5,11 @@
 #include <string>
 #include <chrono>
 #include "task.h"
+#include <mutex>
+
 using namespace std;
 
+extern std::mutex filemutex;
 class Reminder {
 public:
     Reminder(const string& filename);

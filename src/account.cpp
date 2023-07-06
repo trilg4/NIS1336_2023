@@ -56,11 +56,16 @@ int userLogin() {
     vector<User> ulist;
     loadUserFromFile(ulist);
     cout<<"quit? 0 for NO ;1 for YES; "<<endl;
-    int quit;
-    cin>>quit;
-    if(quit==1){
-        saveUserToFile(ulist);
-        exit(0);
+    int quit = 0;
+    while(true){
+        cin>>quit;
+        if(quit == 1){
+            exit(0);
+        }
+        else if(quit == 0){
+            break;
+        }
+        else cout<<"please enter 0 or 1";
     }
     cout<<"if you want to create a new account ,please input the username and the password directly;"<<endl;
     while(true){

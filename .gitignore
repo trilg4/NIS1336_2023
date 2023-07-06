@@ -1,6 +1,7 @@
 # Ignore data and build folder
 /data
 /build
+/CMakeFiles
 
 # Ignore .vscode  folder
 /.vscode

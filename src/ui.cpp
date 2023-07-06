@@ -158,32 +158,50 @@ void UI::doTask(){
     saveTasksToFile(t_list,filename);
 }
 
-bool ui_isFileLocked(const std::string& filePath){
-    int fd = open(filePath.c_str(), O_RDWR);
-    if (fd == -1) {
-        std::cerr << "Failed to open the file." << std::endl;
-        return false;
-    }
+bool isValidTime(const string& timeString){
+    tm timeStruct = {};
+    istringstream iss(timeString);
 
-    // Attempt to acquire a non-blocking exclusive write lock
-    if (flock(fd, LOCK_EX | LOCK_NB) == -1) {
-        if (errno == EWOULDBLOCK) {
-            // The file is already locked
-            close(fd);
-            return true;
-        } else {
-            // An error occurred while acquiring the lock
-            std::cerr << "Failed to acquire the lock." << std::endl;
-            close(fd);
-            return false;
+    // Set the input format as MM/DD/hh/mm
+    iss >> get_time(&timeStruct, "%m/%d/%H/%M");
+
+    // Check if the parsing was successful and the entire string was consumed
+    return !iss.fail() && iss.eof();
+}
+
+bool isValidDate(const string& dateString){
+    tm timeStruct = {};
+    istringstream iss(dateString);
+
+    // Set the input format as MM/DD/hh/mm
+    iss >> get_time(&timeStruct, "%m/%d");
+
+    // Check if the parsing was successful and the entire string was consumed
+    return !iss.fail() && iss.eof();
+}
+
+bool main_doTask(vector<Task> t_list, int taskId, string filename){
+    bool flag = false;
+    for(auto it = t_list.begin() ; it < t_list.end() ; it++){
+        if((*it).getId() == taskId){
+            (*it).setReminded(true);
+            flag = true;
+            break;
         }
     }
+    saveTasksToFile(t_list,filename);
+    return flag;
+}
 
-    // Release the lock
-    if (flock(fd, LOCK_UN) == -1) {
-        std::cerr << "Failed to release the lock." << std::endl;
+bool main_undoTask(vector<Task> t_list, int taskId, string filename){
+    bool flag = false;
+    for(auto it = t_list.begin() ; it < t_list.end() ; it++){
+        if((*it).getId() == taskId){
+            (*it).setReminded(false);
+            flag = true;
+            break;
+        }
     }
-
-    close(fd);
-    return false;
+    saveTasksToFile(t_list,filename);
+    return flag;
 }

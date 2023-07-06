@@ -123,7 +123,8 @@ bool saveTasksToFile(const vector<Task>& tasks, const string& filename){
         this_thread::sleep_for(std::chrono::seconds(5));
     }*/
     filemutex.lock();
-    ofstream outputFile("../data/"+filename);
+    ofstream outputFile;
+    outputFile.open("../data/"+filename, ofstream::app);
     if(outputFile.is_open()){
         for(const auto& tmp : tasks){
             outputFile
@@ -135,7 +136,7 @@ bool saveTasksToFile(const vector<Task>& tasks, const string& filename){
             << tmp.getReminderTime() << " " 
             << tmp.isReminded() << " " <<endl;
         }
-        outputFile.flush();
+        //outputFile.flush();
         outputFile.close();
         //unlockFile(fileDescriptor);
         //close(fileDescriptor);

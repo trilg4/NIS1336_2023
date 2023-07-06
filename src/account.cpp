@@ -107,7 +107,6 @@ string toEncrypt(const string& password){
     return ss.str();
 }
 
-}
 
 int userLogin(string username, string password){
     vector<User> ulist;

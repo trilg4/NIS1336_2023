@@ -1,6 +1,7 @@
 # Ignore data and build folder
 /data
 /build
+/CMakeFiles
 
 # Ignore .vscode  folder
 /.vscode
@@ -9,3 +10,7 @@
 *.o
 *.out
 *.exe
+*.cmake
+
+#Ignore Makefile
+Makefile

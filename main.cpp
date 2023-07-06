@@ -70,6 +70,7 @@ int main(int argc, char* argv[]) {
                     t_list = loadTasksFromFile(filename);
                     int cmd_next_id = 1;
                     if(t_list.empty()){
+                        cout<<"empty"<<endl;
                         cmd_next_id = 1;
                     }
                     else{
@@ -85,9 +86,9 @@ int main(int argc, char* argv[]) {
                 }
                 case 2:{
                     int taskId;
-                    cin >> taskId;
+                    taskId = atoi(argv[4]);
                     //TODO: lock the database file
-                    vector<Task> t_list = loadTasksFromFile(filename);
+                    t_list = loadTasksFromFile(filename);
                     bool status = deleteTask(t_list, taskId);
                     //TODO: unlock the database file
                     if(status) {cout << "Task " << taskId << " deleted successfully." << endl;}
@@ -103,10 +104,10 @@ int main(int argc, char* argv[]) {
                 }
                 case 4:{
                     string date;
-                    cin >> date;
+                    date = argv[4];
                     if(!isValidDate(date)){cout << "Incorrect date format. The date format should be MM/DD."; exit(406); break;}
                     //TODO: lock the database file
-                    vector<Task> t_list = loadTasksFromFile(filename);
+                    t_list = loadTasksFromFile(filename);
                     vector<Task> t_list_date = getTasksByDate(t_list, date);
                     printTasks(t_list_date);
                     if (t_list_date.empty()) cout << "No tasks for " << date << ". " << endl;
@@ -114,7 +115,7 @@ int main(int argc, char* argv[]) {
                 }
                 case 5:{
                     int taskId;
-                    cin >> taskId;
+                    taskId = atoi(argv[4]);
                     //TODO: add error handling
                     //TODO: lock the database file
                     vector<Task> t_list = loadTasksFromFile(filename);
@@ -126,7 +127,7 @@ int main(int argc, char* argv[]) {
                 }
                 case 6:{
                     int taskId;
-                    cin >> taskId;
+                    taskId = atoi(argv[4]);
                     //TODO: add error handling
                     //TODO: lock the database file
                     t_list = loadTasksFromFile(filename);

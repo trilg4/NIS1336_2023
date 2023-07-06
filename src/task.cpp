@@ -84,7 +84,7 @@ vector<Task> loadTasksFromFile(const string& filename){
     */
     filemutex.lock();
     vector<Task> t_list;
-    ifstream infile(filename);
+    ifstream infile("../data/" + filename);
     if(!infile){
         //ofstream outputfile("../data/"+filename);
         vector<Task> new_list;

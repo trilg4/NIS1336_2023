@@ -21,7 +21,9 @@ extern vector<Task> t_list;
 void UI::run(){
     int userLoggedIn = userLogin();
     filename  = to_string(userLoggedIn) + ".txt" ;
+    filemutex.lock();
     t_list = loadTasksFromFile(filename);
+    filemutex.unlock();
     bool flag = true;
     int userOption = 0;
     Reminder reminder(filename);
@@ -48,10 +50,10 @@ void UI::run(){
             case 2:{
                 int tmp_id;
                 cout<<"Please input the task id: "<<endl;
+                cout<<endl;
                 cin>>tmp_id;
-                filemutex.lock();
+                cout<<endl;
                 ui_deleteTask(tmp_id);
-                filemutex.unlock();
                 break;
             }
             case 3:{
@@ -105,9 +107,12 @@ void UI::ui_addTask(){
     int tmp_Priority;
     int tmp_Category;
     string tmp_reminderTime;
+    cout<<endl;
     cin>> tmp_name >> tmp_startTime >> tmp_Priority >> tmp_Category >> tmp_reminderTime;
+    cout<<endl;
     Task tmp(tmp_name, tmp_startTime, (Priority)tmp_Priority, (Category)tmp_Category, tmp_reminderTime);
     addTask(t_list, tmp);  
+    saveTasksToFile(t_list, filename);
 }
 
 void UI::ui_deleteTask(int taskId){
@@ -126,8 +131,10 @@ void UI::ui_deleteTask(int taskId){
 void UI::showTasksByDate(){
     //doesn't chance the structure of the task file
     string dateStr;
-    cout<<"Please input the date in this form: MM/DD";
+    cout<<"Please input the date in this form: MM/DD"<<endl;
+    cout<<endl;
     cin>>dateStr;
+    cout<<endl;
     vector<Task> tmp = getTasksByDate(t_list, dateStr);
     printTasks(tmp);
 
@@ -136,25 +143,32 @@ void UI::showTasksByDate(){
 void UI::undoTask(){
     cout<<"Please input the task id: "<<endl;
     int id;
+    cout<<endl;
     cin>>id;
+    cout<<endl;
+    filemutex.lock();
     for(auto it = t_list.begin() ; it < t_list.end() ; it++){
         if((*it).getId() == id){
             (*it).setReminded(false);
         }
     }
-
+    filemutex.unlock();
     saveTasksToFile(t_list,filename);
 }
 
 void UI::doTask(){
     cout<<"Please input the task id: "<<endl;
     int id;
+    cout<<endl;
     cin>>id;
+    cout<<endl;
+    filemutex.lock();
     for(auto it = t_list.begin() ; it < t_list.end() ; it++){
         if((*it).getId() == id){
             (*it).setReminded(true);
         }
     }
+    filemutex.unlock();
     saveTasksToFile(t_list,filename);
 }
 

@@ -16,7 +16,7 @@ extern bool isValidTime(const string& timeString);
 extern bool isValidDate(const string& dateString);
 extern bool main_doTask(vector<Task> t_list, int taskId, string filename);
 extern bool main_undoTask(vector<Task> t_list, int taskId, string filename);
-
+void help();
 int main(int argc, char* argv[]) {
     if(argc == 1){
     UI ui;
@@ -24,6 +24,10 @@ int main(int argc, char* argv[]) {
     return 0;
     }
     else if(argc >= 2){
+        if(strcmp(argv[1], "-h") == 0){
+            help();
+            return 0;
+        }
         string username, passwd, operation;
         username = argv[1];
         passwd = argv[2];
@@ -121,6 +125,7 @@ int main(int argc, char* argv[]) {
                     vector<Task> t_list = loadTasksFromFile(filename);
                     bool flag = main_doTask(t_list, taskId, filename);
                     //TODO: unlock the database file
+                    saveTasksToFile(t_list, filename);
                     if(flag) {cout << "Successfully set task " << taskId << " as done. " << endl;}
                     else {cout << "Failed to set task " << taskId << "as done. Please check your input. "; exit(404);}
                     break;
@@ -132,6 +137,7 @@ int main(int argc, char* argv[]) {
                     //TODO: lock the database file
                     t_list = loadTasksFromFile(filename);
                     bool flag = main_undoTask(t_list, taskId, filename);
+                    saveTasksToFile(t_list, filename);
                     //TODO: unlock the database file
                     if(flag) {cout << "Successfully set task " << taskId << " as undone. " << endl;}
                     else {cout << "Failed to set task " << taskId << "as undone. Please check your input. "; exit(404);}
@@ -142,4 +148,30 @@ int main(int argc, char* argv[]) {
         }
     exit(0);
     }
+}
+
+void help(){
+    cout<<"To addTask try: ./todo username password addTask startTime Priority Category reminderTime"<<endl;
+    cout<<"The time format : MM/DD/hh/mm"<<endl;
+    cout<<"Priority: HIGH MEDIUM LOW"<<endl;
+    cout<<"Category: LIFE ENTERTAINMENT LEARNING"<<endl;
+    cout<<endl;
+
+    cout<<"To deleteTask try: ./todo username password deleteTask <int>taskId"<<endl;
+    cout<<endl;
+
+    cout<<"To viewTask try: ./todo username password viewTask"<<endl;
+    cout<<endl;
+
+    cout<<"To viewTaskByDate try: ./todo username password viewTaskByDate reminderTime"<<endl;
+    cout<<"The time format : MM/DD"<<endl;
+    cout<<endl;
+
+    cout<<"To doTask try: ./todo username password doTask <int>taskId"<<endl;
+    cout<<endl;
+
+    cout<<"To undoTask try: ./todo username password undoTask <int>taskId"<<endl;
+    cout<<endl;
+
+
 }

@@ -21,7 +21,9 @@ extern vector<Task> t_list;
 void UI::run(){
     int userLoggedIn = userLogin();
     filename  = to_string(userLoggedIn) + ".txt" ;
+    filemutex.lock();
     t_list = loadTasksFromFile(filename);
+    filemutex.unlock();
     bool flag = true;
     int userOption = 0;
     Reminder reminder(filename);
@@ -41,17 +43,16 @@ void UI::run(){
         else if(strcasecmp(command.c_str(), "logOut") == 0) userOption = 7;
         switch(userOption){
             case 1:{
-                
                 ui_addTask();
                 break;
             }
             case 2:{
                 int tmp_id;
                 cout<<"Please input the task id: "<<endl;
+                cout<<endl;
                 cin>>tmp_id;
-                filemutex.lock();
+                cout<<endl;
                 ui_deleteTask(tmp_id);
-                filemutex.unlock();
                 break;
             }
             case 3:{
@@ -105,9 +106,20 @@ void UI::ui_addTask(){
     int tmp_Priority;
     int tmp_Category;
     string tmp_reminderTime;
-    cin>> tmp_name >> tmp_startTime >> tmp_Priority >> tmp_Category >> tmp_reminderTime;
+    cout<<endl;
+    while(true){
+        cin>> tmp_name >> tmp_startTime >> tmp_Priority >> tmp_Category >> tmp_reminderTime;
+        if(isValidTime(tmp_startTime) && isValidTime(tmp_reminderTime) && isValidPriority(tmp_Priority) && isValidCategory(tmp_Category)){
+            break;
+        }
+        else{
+            cout<<"Format err. Please check your input."<<endl;
+        }
+    }
+    cout<<endl;
     Task tmp(tmp_name, tmp_startTime, (Priority)tmp_Priority, (Category)tmp_Category, tmp_reminderTime);
     addTask(t_list, tmp);  
+    saveTasksToFile(t_list, filename);
 }
 
 void UI::ui_deleteTask(int taskId){
@@ -126,8 +138,19 @@ void UI::ui_deleteTask(int taskId){
 void UI::showTasksByDate(){
     //doesn't chance the structure of the task file
     string dateStr;
-    cout<<"Please input the date in this form: MM/DD";
-    cin>>dateStr;
+    cout<<"Please input the date in this form: MM/DD"<<endl;
+    cout<<endl;
+    while(true){
+        cin>>dateStr;
+        if(isValidDate(dateStr)){
+            break;
+        }
+        else{
+            cout<<"Format err. Please check your input."<<endl;
+        }
+    }
+    
+    cout<<endl;
     vector<Task> tmp = getTasksByDate(t_list, dateStr);
     printTasks(tmp);
 
@@ -136,25 +159,32 @@ void UI::showTasksByDate(){
 void UI::undoTask(){
     cout<<"Please input the task id: "<<endl;
     int id;
+    cout<<endl;
     cin>>id;
+    cout<<endl;
+    filemutex.lock();
     for(auto it = t_list.begin() ; it < t_list.end() ; it++){
         if((*it).getId() == id){
             (*it).setReminded(false);
         }
     }
-
+    filemutex.unlock();
     saveTasksToFile(t_list,filename);
 }
 
 void UI::doTask(){
     cout<<"Please input the task id: "<<endl;
     int id;
+    cout<<endl;
     cin>>id;
+    cout<<endl;
+    filemutex.lock();
     for(auto it = t_list.begin() ; it < t_list.end() ; it++){
         if((*it).getId() == id){
             (*it).setReminded(true);
         }
     }
+    filemutex.unlock();
     saveTasksToFile(t_list,filename);
 }
 
@@ -180,7 +210,7 @@ bool isValidDate(const string& dateString){
     return !iss.fail() && iss.eof();
 }
 
-bool main_doTask(vector<Task> t_list, int taskId, string filename){
+bool main_doTask(vector<Task>& t_list, int taskId, string filename){
     bool flag = false;
     for(auto it = t_list.begin() ; it < t_list.end() ; it++){
         if((*it).getId() == taskId){
@@ -193,7 +223,7 @@ bool main_doTask(vector<Task> t_list, int taskId, string filename){
     return flag;
 }
 
-bool main_undoTask(vector<Task> t_list, int taskId, string filename){
+bool main_undoTask(vector<Task>& t_list, int taskId, string filename){
     bool flag = false;
     for(auto it = t_list.begin() ; it < t_list.end() ; it++){
         if((*it).getId() == taskId){
@@ -204,4 +234,22 @@ bool main_undoTask(vector<Task> t_list, int taskId, string filename){
     }
     saveTasksToFile(t_list,filename);
     return flag;
+}
+
+bool isValidPriority(int priority){
+    if(priority >= 0 && priority <=2){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
+bool isValidCategory(int category){
+    if(category >= 0 && category <=2){
+        return true;
+    }
+    else{
+        return false;
+    }
 }

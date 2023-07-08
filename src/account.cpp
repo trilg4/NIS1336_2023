@@ -58,7 +58,9 @@ int userLogin() {
     cout<<"quit? 0 for NO ;1 for YES; "<<endl;
     int quit = 0;
     while(true){
+        cout<<endl;
         cin>>quit;
+        cout<<endl;
         if(quit == 1){
             exit(0);
         }
@@ -107,7 +109,6 @@ string toEncrypt(const string& password){
     return ss.str();
 }
 
-}
 
 int userLogin(string username, string password){
     vector<User> ulist;

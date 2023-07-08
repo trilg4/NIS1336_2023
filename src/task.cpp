@@ -59,36 +59,30 @@ void Task::setReminded(bool reminded){
 
 void addTask(vector<Task>& tasks, const Task& task){
     //TODO: add a check to ensure task name and startTime is unique
+    filemutex.lock();
     tasks.push_back(task);
+    filemutex.unlock();
 }
 
 bool deleteTask(vector<Task>& tasks, int taskId){
+    filemutex.lock();
     for(auto it = tasks.begin() ; it != tasks.end() ; it++){
         if((*it).getId() == taskId){
             tasks.erase(it);
+            filemutex.unlock();
             return true;
         }
     }
+    filemutex.unlock();
     return false;
 }
 
 vector<Task> loadTasksFromFile(const string& filename){
-    /*int fileDescriptor = open(("../data/"+filename).c_str(), O_WRONLY | O_APPEND);
-    while (fileDescriptor == -1) {
-        cout<<"in loadTask fail to open "<<filename;
-        this_thread::sleep_for(std::chrono::seconds(5));
-    }
-    while (!lockFile(fileDescriptor)) {
-        this_thread::sleep_for(std::chrono::seconds(5));
-    }
-    */
-    filemutex.lock();
     vector<Task> t_list;
-    ifstream infile(filename);
+    ifstream infile("../data/" + filename);
     if(!infile){
         //ofstream outputfile("../data/"+filename);
         vector<Task> new_list;
-        filemutex.unlock();
         return new_list;
     }
     int tmp_id;
@@ -98,12 +92,14 @@ vector<Task> loadTasksFromFile(const string& filename){
     int tmp_category;
     string tmp_reminderTime;
     bool tmp_reminded;
-
     while(infile >> tmp_id >> tmp_Name >> tmp_startTime >> tmp_priority >> tmp_category >> tmp_reminderTime >> tmp_reminded){
-        Task tmp(tmp_id, tmp_Name, tmp_startTime, (Priority)tmp_priority, (Category)tmp_category, tmp_reminderTime);
+        Task tmp(tmp_id, tmp_Name, tmp_startTime, (Priority)tmp_priority, (Category)tmp_category, tmp_reminderTime, tmp_reminded);
         t_list.push_back(tmp);
     }
-    filemutex.unlock();
+    if(t_list.empty()){
+        vector<Task> new_list;
+        return new_list;
+    }
     sort_by_id(t_list);
     setNextId((*(t_list.end()-1)).getId()+1);
     //unlockFile(fileDescriptor);
@@ -113,17 +109,8 @@ vector<Task> loadTasksFromFile(const string& filename){
 }
 
 bool saveTasksToFile(const vector<Task>& tasks, const string& filename){
-    /*int fileDescriptor = open(("../data/"+filename).c_str(), O_WRONLY | O_TRUNC);
-    if (fileDescriptor == -1) {
-        cout<<"in saveTask fail to open "<<filename;
-        this_thread::sleep_for(std::chrono::seconds(5));
-    }
-    if (!lockFile(fileDescriptor)) {
-        cout<<"in saveTask fail to lock "<<filename;
-        this_thread::sleep_for(std::chrono::seconds(5));
-    }*/
-    filemutex.lock();
-    ofstream outputFile("../data/"+filename);
+    ofstream outputFile;
+    outputFile.open("../data/"+filename);
     if(outputFile.is_open()){
         for(const auto& tmp : tasks){
             outputFile
@@ -135,11 +122,7 @@ bool saveTasksToFile(const vector<Task>& tasks, const string& filename){
             << tmp.getReminderTime() << " " 
             << tmp.isReminded() << " " <<endl;
         }
-        outputFile.flush();
         outputFile.close();
-        //unlockFile(fileDescriptor);
-        //close(fileDescriptor);
-        filemutex.unlock();
         return true;
     }
     return false;
@@ -149,20 +132,20 @@ bool saveTasksToFile(const vector<Task>& tasks, const string& filename){
 void printTasks(const vector<Task>& tasks){
     cout<<setw(5)<<"Id"
         <<setw(10)<<"Name"
-        <<setw(15)<<"Start Time"
-        <<setw(3)<<"Priority"
-        <<setw(3)<<"Category"
-        <<setw(15)<<"Reminder Time"
-        <<setw(3)<<"Reminded"
+        <<setw(20)<<"Start Time"
+        <<setw(10)<<"Priority"
+        <<setw(10)<<"Category"
+        <<setw(20)<<"Reminder Time"
+        <<setw(10)<<"Reminded"
         <<endl;
     for(auto it = tasks.begin() ; it < tasks.end() ; it++){
         cout<<setw(5) << (*it).getId()
             <<setw(10) << (*it).getName()
-            <<setw(15) << (*it).getStartTime()
-            <<setw(3) << (int)(*it).getPriority()
-            <<setw(3) << (int)(*it).getCategory()
-            <<setw(15) << (*it).getReminderTime()
-            <<setw(3) << (*it).isReminded()
+            <<setw(20) << (*it).getStartTime()
+            <<setw(10) << (int)(*it).getPriority()
+            <<setw(10) << (int)(*it).getCategory()
+            <<setw(20) << (*it).getReminderTime()
+            <<setw(10) << (*it).isReminded()
             <<endl;
     }
 }

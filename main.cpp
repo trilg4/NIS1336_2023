@@ -14,8 +14,8 @@ using namespace std;
 extern int userLogin(string username, string password);
 extern bool isValidTime(const string& timeString);
 extern bool isValidDate(const string& dateString);
-extern bool main_doTask(vector<Task> t_list, int taskId, string filename);
-extern bool main_undoTask(vector<Task> t_list, int taskId, string filename);
+extern bool main_doTask(vector<Task>& t_list, int taskId, string filename);
+extern bool main_undoTask(vector<Task>& t_list, int taskId, string filename);
 void help();
 int main(int argc, char* argv[]) {
     if(argc == 1){
@@ -57,7 +57,7 @@ int main(int argc, char* argv[]) {
                     cate = argv[7];
                     remindTime = argv[8];
                     if (!isValidTime(startTime) || !isValidTime(remindTime)){
-                        cout << "Incorrect time format. The time format should be MM/DD/hh/mm."; exit(406); break;
+                        cout << "Incorrect time format. The time format should be MM/DD/hh/mm." <<endl; exit(406); break;
                     }
                     Priority pr;
                     if(strcasecmp(pri.c_str(), "HIGH") == 0) pr = Priority::HIGH;
@@ -94,6 +94,7 @@ int main(int argc, char* argv[]) {
                     //TODO: lock the database file
                     t_list = loadTasksFromFile(filename);
                     bool status = deleteTask(t_list, taskId);
+                    saveTasksToFile(t_list, filename);
                     //TODO: unlock the database file
                     if(status) {cout << "Task " << taskId << " deleted successfully." << endl;}
                     else {cout << "Failed to delete task " << taskId << ". " << endl; exit(404);}
@@ -109,7 +110,7 @@ int main(int argc, char* argv[]) {
                 case 4:{
                     string date;
                     date = argv[4];
-                    if(!isValidDate(date)){cout << "Incorrect date format. The date format should be MM/DD."; exit(406); break;}
+                    if(!isValidDate(date)){cout << "Incorrect date format. The date format should be MM/DD."<<endl; exit(406); break;}
                     //TODO: lock the database file
                     t_list = loadTasksFromFile(filename);
                     vector<Task> t_list_date = getTasksByDate(t_list, date);
@@ -120,27 +121,22 @@ int main(int argc, char* argv[]) {
                 case 5:{
                     int taskId;
                     taskId = atoi(argv[4]);
-                    //TODO: add error handling
-                    //TODO: lock the database file
-                    vector<Task> t_list = loadTasksFromFile(filename);
+                    t_list = loadTasksFromFile(filename);
                     bool flag = main_doTask(t_list, taskId, filename);
-                    //TODO: unlock the database file
+                    cout<<"HHHH "<<t_list[0].isReminded()<<endl;
                     saveTasksToFile(t_list, filename);
                     if(flag) {cout << "Successfully set task " << taskId << " as done. " << endl;}
-                    else {cout << "Failed to set task " << taskId << "as done. Please check your input. "; exit(404);}
+                    else {cout << "Failed to set task " << taskId << "as done. Please check your input. "<<endl; exit(404);}
                     break;
                 }
                 case 6:{
                     int taskId;
                     taskId = atoi(argv[4]);
-                    //TODO: add error handling
-                    //TODO: lock the database file
                     t_list = loadTasksFromFile(filename);
                     bool flag = main_undoTask(t_list, taskId, filename);
                     saveTasksToFile(t_list, filename);
-                    //TODO: unlock the database file
                     if(flag) {cout << "Successfully set task " << taskId << " as undone. " << endl;}
-                    else {cout << "Failed to set task " << taskId << "as undone. Please check your input. "; exit(404);}
+                    else {cout << "Failed to set task " << taskId << "as undone. Please check your input. "<<endl; exit(404);}
                     break;
                 }
                 default:{{cout << "An error occurred. Plese check your input." << endl; exit(404); break;}}

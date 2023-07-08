@@ -27,4 +27,8 @@ private:
 
 };
 bool ui_isFileLocked(const std::string& filePath);
+bool isValidDate(const string& date);
+bool isValidTime(const string& time);
+bool isValidCategory(int category);
+bool isValidPriority(int priority);
 #endif // UI_H

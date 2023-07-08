@@ -43,7 +43,6 @@ void UI::run(){
         else if(strcasecmp(command.c_str(), "logOut") == 0) userOption = 7;
         switch(userOption){
             case 1:{
-                
                 ui_addTask();
                 break;
             }
@@ -108,7 +107,15 @@ void UI::ui_addTask(){
     int tmp_Category;
     string tmp_reminderTime;
     cout<<endl;
-    cin>> tmp_name >> tmp_startTime >> tmp_Priority >> tmp_Category >> tmp_reminderTime;
+    while(true){
+        cin>> tmp_name >> tmp_startTime >> tmp_Priority >> tmp_Category >> tmp_reminderTime;
+        if(isValidTime(tmp_startTime) && isValidTime(tmp_reminderTime) && isValidPriority(tmp_Priority) && isValidCategory(tmp_Category)){
+            break;
+        }
+        else{
+            cout<<"Format err. Please check your input."<<endl;
+        }
+    }
     cout<<endl;
     Task tmp(tmp_name, tmp_startTime, (Priority)tmp_Priority, (Category)tmp_Category, tmp_reminderTime);
     addTask(t_list, tmp);  
@@ -133,7 +140,16 @@ void UI::showTasksByDate(){
     string dateStr;
     cout<<"Please input the date in this form: MM/DD"<<endl;
     cout<<endl;
-    cin>>dateStr;
+    while(true){
+        cin>>dateStr;
+        if(isValidDate(dateStr)){
+            break;
+        }
+        else{
+            cout<<"Format err. Please check your input."<<endl;
+        }
+    }
+    
     cout<<endl;
     vector<Task> tmp = getTasksByDate(t_list, dateStr);
     printTasks(tmp);
@@ -194,7 +210,7 @@ bool isValidDate(const string& dateString){
     return !iss.fail() && iss.eof();
 }
 
-bool main_doTask(vector<Task> t_list, int taskId, string filename){
+bool main_doTask(vector<Task>& t_list, int taskId, string filename){
     bool flag = false;
     for(auto it = t_list.begin() ; it < t_list.end() ; it++){
         if((*it).getId() == taskId){
@@ -207,7 +223,7 @@ bool main_doTask(vector<Task> t_list, int taskId, string filename){
     return flag;
 }
 
-bool main_undoTask(vector<Task> t_list, int taskId, string filename){
+bool main_undoTask(vector<Task>& t_list, int taskId, string filename){
     bool flag = false;
     for(auto it = t_list.begin() ; it < t_list.end() ; it++){
         if((*it).getId() == taskId){
@@ -218,4 +234,22 @@ bool main_undoTask(vector<Task> t_list, int taskId, string filename){
     }
     saveTasksToFile(t_list,filename);
     return flag;
+}
+
+bool isValidPriority(int priority){
+    if(priority >= 0 && priority <=2){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
+bool isValidCategory(int category){
+    if(category >= 0 && category <=2){
+        return true;
+    }
+    else{
+        return false;
+    }
 }

@@ -93,7 +93,7 @@ vector<Task> loadTasksFromFile(const string& filename){
     string tmp_reminderTime;
     bool tmp_reminded;
     while(infile >> tmp_id >> tmp_Name >> tmp_startTime >> tmp_priority >> tmp_category >> tmp_reminderTime >> tmp_reminded){
-        Task tmp(tmp_id, tmp_Name, tmp_startTime, (Priority)tmp_priority, (Category)tmp_category, tmp_reminderTime);
+        Task tmp(tmp_id, tmp_Name, tmp_startTime, (Priority)tmp_priority, (Category)tmp_category, tmp_reminderTime, tmp_reminded);
         t_list.push_back(tmp);
     }
     if(t_list.empty()){

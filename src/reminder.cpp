@@ -6,7 +6,7 @@
 #include <sys/file.h>
 #include <cerrno>
 #include <mutex>
-
+#include <iomanip>
 extern std::mutex filemutex;
 extern vector<Task> t_list;
 
@@ -50,7 +50,21 @@ void Reminder::scan(){ //may check every 15 minutes
     for(int i=0;i<numberofTasks;i++){
         if(compareTime(Rem_Tasks[i].getReminderTime(),getCurrentTime())&&!Rem_Tasks[i].isReminded())
         {
-            std::cout<<Rem_Tasks[i].getId()<<" "<<Rem_Tasks[i].getName()<<" "<<Rem_Tasks[i].getReminderTime()<<std::endl;
+            cout<<"This task is OVER DUE !"<<endl;
+            cout<<setw(5)<<"Id"
+                <<setw(10)<<"Name"
+                <<setw(20)<<"Start Time"
+                <<setw(10)<<"Priority"
+                <<setw(10)<<"Category"
+                <<setw(20)<<"Reminder Time"
+                <<endl;
+            cout<<setw(5) << Rem_Tasks[i].getId()
+                <<setw(10) << Rem_Tasks[i].getName()
+                <<setw(20) << Rem_Tasks[i].getStartTime()
+                <<setw(10) << (int)Rem_Tasks[i].getPriority()
+                <<setw(10) << (int)Rem_Tasks[i].getCategory()
+                <<setw(20) << Rem_Tasks[i].getReminderTime()
+                <<endl;
             Rem_Tasks[i].setReminded(true);
         }
     }

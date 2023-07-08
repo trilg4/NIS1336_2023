@@ -123,7 +123,6 @@ int main(int argc, char* argv[]) {
                     taskId = atoi(argv[4]);
                     t_list = loadTasksFromFile(filename);
                     bool flag = main_doTask(t_list, taskId, filename);
-                    cout<<"HHHH "<<t_list[0].isReminded()<<endl;
                     saveTasksToFile(t_list, filename);
                     if(flag) {cout << "Successfully set task " << taskId << " as done. " << endl;}
                     else {cout << "Failed to set task " << taskId << "as done. Please check your input. "<<endl; exit(404);}
